@@ -32,10 +32,10 @@ type TitleParams struct {
 	ResponseType string `url:"r,omitempty"`
 }
 
-// testCmd represents the test command
-var testCmd = &cobra.Command{
-	Use:   "test",
-	Short: "A brief description of your command",
+// titleCmd represents the title command
+var titleCmd = &cobra.Command{
+	Use:   "title",
+	Short: "Search OMDB by film title",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 
@@ -43,11 +43,16 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
+		numArgs := len(args)
+		if numArgs != 1 {
+			fmt.Println("Usage: omdb title \"<title of film>\"")
+			return
+		}
 
-		// params := &Params{Count: 5}
+		searchKey := args[0]
+
 		client := &http.Client{}
-		// req, err := sling.New().Get("https://www.omdbapi.com/?t=the+matrix&plot=short&r=json").Request()
-		params := &TitleParams{Title: "the matrix", Plot: "short", ResponseType: "json"}
+		params := &TitleParams{Title: searchKey, Plot: "short", ResponseType: "json"}
 		req, err := sling.New().Get("https://www.omdbapi.com/").QueryStruct(params).Request()
 
 		if err != nil { //TODO: use juju errors
@@ -72,16 +77,16 @@ to quickly create a Cobra application.`,
 }
 
 func init() {
-	RootCmd.AddCommand(testCmd)
+	RootCmd.AddCommand(titleCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// testCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// titleCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// testCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// titleCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
 }
