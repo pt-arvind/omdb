@@ -23,7 +23,7 @@ import (
 // omdbCmd represents the omdb command
 var omdbCmd = &cobra.Command{
 	Use:   "omdb",
-	Short: "A brief description of your command",
+	Short: "A CLI command to access the Open Movie Database API",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 
