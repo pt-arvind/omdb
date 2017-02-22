@@ -16,37 +16,66 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
-// omdbCmd represents the omdb command
-var omdbCmd = &cobra.Command{
+var cfgFile string
+var VERSION string
+
+// RootCmd represents the base command when called without any subcommands
+var RootCmd = &cobra.Command{
 	Use:   "omdb",
 	Short: "A CLI command to access the Open Movie Database API",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Long: `A longer description that spans multiple lines and likely contains
+examples and usage of using your application. For example:
 
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		// TODO: Work your own magic here
-		fmt.Println("omdb called")
-	},
+	// Uncomment the following line if your bare application
+	// has an action associated with it:
+	//	Run: func(cmd *cobra.Command, args []string) { },
+}
+
+// Execute adds all child commands to the root command sets flags appropriately.
+// This is called by main.main(). It only needs to happen once to the rootCmd.
+func Execute(version string) {
+	VERSION = version
+
+	if err := RootCmd.Execute(); err != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
 }
 
 func init() {
-	RootCmd.AddCommand(omdbCmd)
+	cobra.OnInitialize(initConfig)
 
 	// Here you will define your flags and configuration settings.
+	// Cobra supports Persistent Flags, which, if defined here,
+	// will be global for your application.
 
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// omdbCmd.PersistentFlags().String("foo", "", "A help for foo")
+	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.omdb.yaml)")
+	// Cobra also supports local flags, which will only run
+	// when this action is called directly.
+	RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+}
 
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// omdbCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+// initConfig reads in config file and ENV variables if set.
+func initConfig() {
+	if cfgFile != "" { // enable ability to specify config file via flag
+		viper.SetConfigFile(cfgFile)
+	}
 
+	viper.SetConfigName(".omdb") // name of config file (without extension)
+	viper.AddConfigPath("$HOME") // adding home directory as first search path
+	viper.AutomaticEnv()         // read in environment variables that match
+
+	// If a config file is found, read it in.
+	if err := viper.ReadInConfig(); err == nil {
+		fmt.Println("Using config file:", viper.ConfigFileUsed())
+	}
 }
