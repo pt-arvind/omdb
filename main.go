@@ -14,7 +14,7 @@
 
 package main
 
-import "github.com/pt-arvind/omdb/cmd"
+import "github.com/pt-arvind/omdb/cmd" //relative to src folder
 
 func main() {
 	cmd.Execute()
