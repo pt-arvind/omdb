@@ -21,6 +21,8 @@ import (
 
 	"github.com/dghubble/sling"
 	"github.com/spf13/cobra"
+
+	log "github.com/Sirupsen/logrus"
 )
 
 // type Params struct {
@@ -58,6 +60,9 @@ to quickly create a Cobra application.`,
 		if err != nil { //TODO: use juju errors
 			fmt.Println("error: " + err.Error())
 		}
+		log.WithFields(log.Fields{
+			"REQUEST": req,
+		}).Info("MAKING REQUEST")
 
 		resp, err := client.Do(req)
 
@@ -72,6 +77,11 @@ to quickly create a Cobra application.`,
 		if err != nil { //TODO: use juju errors
 			fmt.Println("error: " + err.Error())
 		}
+
+		log.WithFields(log.Fields{
+			"API RESPONSE": string(body),
+		}).Info("RESPONSE RECEIVED")
+
 		fmt.Println("\n****\nAPI response: \n" + string(body))
 	},
 }
