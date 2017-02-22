@@ -16,6 +16,10 @@ package main
 
 import "github.com/pt-arvind/omdb/cmd" //relative to src folder
 
+var (
+	VERSION = "0.0.1"
+)
+
 func main() {
-	cmd.Execute()
+	cmd.Execute(VERSION)
 }
