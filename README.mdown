@@ -1,7 +1,2 @@
-Build with
-
-goxc \
-  -bc="darwin,amd64" \
-  -pv=0.0.1 \
-  -d=build \
-  -build-ldflags "-X main.VERSION=0.0.1"
+make clean
+make build
